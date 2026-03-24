@@ -1,6 +1,7 @@
 <script lang="ts">
 	import StatsCard from '$lib/components/StatsCard.svelte';
 	import BlockTable from '$lib/components/BlockTable.svelte';
+	import LiveFeed from '$lib/components/LiveFeed.svelte';
 	import { formatNumber, formatAmount, formatDifficulty, truncateHash } from '$lib/utils';
 
 	let { data } = $props();
@@ -64,15 +65,25 @@
 	{/if}
 {/if}
 
-<!-- Latest Blocks -->
-<div class="bg-tri-surface border border-tri-border rounded-lg overflow-hidden">
-	<div class="flex items-center justify-between px-4 py-3 border-b border-tri-border">
-		<h2 class="text-white font-semibold">Latest Blocks</h2>
-		<a href="/blocks" class="text-tri-accent text-sm hover:text-tri-accent-light">View all &rarr;</a>
+<!-- Live Feed + Latest Blocks Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+	<!-- Live Feed (1 column) -->
+	<div class="lg:col-span-1">
+		<LiveFeed />
 	</div>
-	{#if data.blocks.length > 0}
-		<BlockTable blocks={data.blocks} />
-	{:else}
-		<div class="p-8 text-center text-tri-muted">No blocks available</div>
-	{/if}
+	
+	<!-- Latest Blocks (2 columns) -->
+	<div class="lg:col-span-2">
+		<div class="bg-tri-surface border border-tri-border rounded-lg overflow-hidden h-full">
+			<div class="flex items-center justify-between px-4 py-3 border-b border-tri-border">
+				<h2 class="text-white font-semibold">Latest Blocks</h2>
+				<a href="/blocks" class="text-tri-accent text-sm hover:text-tri-accent-light">View all &rarr;</a>
+			</div>
+			{#if data.blocks.length > 0}
+				<BlockTable blocks={data.blocks} />
+			{:else}
+				<div class="p-8 text-center text-tri-muted">No blocks available</div>
+			{/if}
+		</div>
+	</div>
 </div>
