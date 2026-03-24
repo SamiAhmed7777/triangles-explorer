@@ -1,9 +1,14 @@
 <script lang="ts">
 	import '../app.css';
 	import SearchBar from '$lib/components/SearchBar.svelte';
+	import Toast from '$lib/components/Toast.svelte';
 	import { formatNumber, formatAmount, formatDifficulty } from '$lib/utils';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+	import { io } from 'socket.io-client';
 
 	let { data, children } = $props();
+	let toast: any;
 
 	const navLinks = [
 		{ href: '/', label: 'Home' },
@@ -14,12 +19,43 @@
 		{ href: '/mempool', label: 'Mempool' },
 		{ href: '/api', label: 'API' }
 	];
+
+	onMount(() => {
+		if (browser) {
+			const socket = io('http://localhost:3051');
+			
+			socket.on('connect', () => {
+				console.log('WebSocket connected');
+			});
+			
+			socket.on('newBlock', (block: any) => {
+				console.log('New block:', block);
+				if (toast) {
+					toast.show(
+						`New Block #${block.height.toLocaleString()} - ${block.tx} txs`,
+						'success',
+						8000
+					);
+				}
+			});
+			
+			socket.on('disconnect', () => {
+				console.log('WebSocket disconnected');
+			});
+			
+			return () => {
+				socket.disconnect();
+			};
+		}
+	});
 </script>
 
 <svelte:head>
 	<title>Triangles Block Explorer</title>
 	<meta name="description" content="Block explorer for the Triangles (TRI) cryptocurrency" />
 </svelte:head>
+
+<Toast bind:this={toast} />
 
 <div class="min-h-screen bg-tri-bg text-tri-text flex flex-col">
 	<!-- Header -->
@@ -50,10 +86,10 @@
 	</main>
 
 	<!-- Footer -->
-	<footer class="border-t border-tri-border bg-tri-surface/30 py-4">
+	<footer class="border-t border-tri-border bg-tri-surface/30 py-6">
 		<div class="max-w-7xl mx-auto px-4">
 			{#if data.chain}
-				<div class="flex flex-wrap gap-6 text-xs text-tri-muted justify-center">
+				<div class="flex flex-wrap gap-6 text-xs text-tri-muted justify-center mb-4">
 					<span>Height: <strong class="text-tri-text">{formatNumber(data.chain.blocks)}</strong></span>
 					<span>Supply: <strong class="text-tri-text">{formatAmount(data.chain.moneysupply)} TRI</strong></span>
 					<span>PoS Diff: <strong class="text-tri-text">{formatDifficulty(data.chain.difficulty['proof-of-stake'])}</strong></span>
@@ -63,10 +99,31 @@
 					<span>Chain: <strong class="text-tri-text">{data.chain.chain}</strong></span>
 				</div>
 			{:else}
-				<div class="text-center text-xs text-tri-muted">Daemon unavailable</div>
+				<div class="text-center text-xs text-tri-muted mb-4">Daemon unavailable</div>
 			{/if}
-			<div class="text-center text-xs text-tri-muted mt-2">
-				Triangles Block Explorer &mdash; <a href="https://cryptographic-triangles.org" class="text-tri-accent hover:underline">cryptographic-triangles.org</a>
+			
+			<!-- Links Section -->
+			<div class="flex flex-wrap gap-4 justify-center text-xs mb-3">
+				<a href="https://cryptographic-triangles.org" class="text-tri-accent hover:text-white transition-colors" target="_blank" rel="noopener">
+					🌐 Official Website
+				</a>
+				<a href="https://github.com/triangles-project" class="text-tri-accent hover:text-white transition-colors" target="_blank" rel="noopener">
+					📦 GitHub
+				</a>
+				<a href="https://discord.gg/triangles" class="text-tri-accent hover:text-white transition-colors" target="_blank" rel="noopener">
+					💬 Discord
+				</a>
+				<a href="/api" class="text-tri-accent hover:text-white transition-colors">
+					📖 API Docs
+				</a>
+				<a href="https://github.com/triangles-project/explorer" class="text-tri-muted hover:text-white transition-colors text-xs" target="_blank" rel="noopener">
+					⭐ Star on GitHub
+				</a>
+			</div>
+			
+			<div class="text-center text-xs text-tri-muted">
+				<p>Triangles Block Explorer v1.0.0</p>
+				<p class="mt-1">Made with ❤️ for the Triangles community</p>
 			</div>
 		</div>
 	</footer>

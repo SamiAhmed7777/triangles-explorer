@@ -31,9 +31,12 @@
 						</a>
 					</td>
 					<td class="py-2.5 px-3 font-mono text-xs">
-						<a href="/block/{block.hash}" class="text-tri-text hover:text-tri-accent-light">
-							{truncateHash(block.hash, 10)}
-						</a>
+						<div class="flex items-center gap-2">
+							<a href="/block/{block.hash}" class="text-tri-text hover:text-tri-accent-light">
+								{truncateHash(block.hash, 10)}
+							</a>
+							<CopyButton value={block.hash} label="" size="xs" />
+						</div>
 					</td>
 					<td class="py-2.5 px-3 text-tri-muted">{timeAgo(block.time)}</td>
 					<td class="py-2.5 px-3 text-center">{block.tx.length}</td>

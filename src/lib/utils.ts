@@ -1,12 +1,26 @@
 export function timeAgo(timestamp: number): string {
 	const seconds = Math.floor(Date.now() / 1000 - timestamp);
-	if (seconds < 60) return `${seconds}s ago`;
+	if (seconds < 0) return 'in the future'; // Handle clock skew
+	if (seconds < 5) return 'just now';
+	if (seconds < 60) return `${seconds} seconds ago`;
 	const minutes = Math.floor(seconds / 60);
-	if (minutes < 60) return `${minutes}m ago`;
+	if (minutes === 1) return '1 minute ago';
+	if (minutes < 60) return `${minutes} minutes ago`;
 	const hours = Math.floor(minutes / 60);
-	if (hours < 24) return `${hours}h ago`;
+	if (hours === 1) return '1 hour ago';
+	if (hours < 24) return `${hours} hours ago`;
 	const days = Math.floor(hours / 24);
-	return `${days}d ago`;
+	if (days === 1) return 'yesterday';
+	if (days < 7) return `${days} days ago`;
+	if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+	if (days < 365) return `${Math.floor(days / 30)} months ago`;
+	return `${Math.floor(days / 365)} years ago`;
+}
+
+export function formatTimestampWithRelative(ts: number): string {
+	const absolute = new Date(ts * 1000).toLocaleString();
+	const relative = timeAgo(ts);
+	return `${relative} (${absolute})`;
 }
 
 export function truncateHash(hash: string, chars = 8): string {

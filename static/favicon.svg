@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="triGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#991b1b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Outer triangle -->
+  <path d="M 50 10 L 90 80 L 10 80 Z" fill="url(#triGradient)" stroke="#ffffff" stroke-width="2"/>
+  <!-- Inner triangle -->
+  <path d="M 50 30 L 70 65 L 30 65 Z" fill="#000000" opacity="0.3"/>
+</svg>

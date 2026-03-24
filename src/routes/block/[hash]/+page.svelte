@@ -1,19 +1,20 @@
 <script lang="ts">
 	import TxTable from '$lib/components/TxTable.svelte';
-	import { formatTimestamp, formatDifficulty, blockType, truncateHash } from '$lib/utils';
+	import CopyButton from '$lib/components/CopyButton.svelte';
+	import { formatTimestampWithRelative, formatDifficulty, blockType, truncateHash } from '$lib/utils';
 
 	let { data } = $props();
 	const block = data.block;
 	const addresses = data.addresses || [];
 
-	const fields: [string, string][] = [
+	const fields: [string, string, string?][] = [
 		['Height', String(block.height)],
 		['Confirmations', String(block.confirmations)],
-		['Timestamp', formatTimestamp(block.time)],
+		['Timestamp', formatTimestampWithRelative(block.time)],
 		['Type', blockType(block.flags)],
 		['Difficulty', formatDifficulty(block.difficulty)],
 		['Transactions', String(block.tx.length)],
-		['Merkle Root', truncateHash(block.merkleroot, 16)],
+		['Merkle Root', block.merkleroot, block.merkleroot],
 		['Nonce', String(block.nonce)],
 		['Bits', block.bits],
 		['Size', block.size ? `${block.size} bytes` : 'N/A'],
@@ -28,9 +29,12 @@
 
 <!-- Navigation -->
 <div class="flex items-center justify-between mb-6">
-	<div>
+	<div class="flex-1">
 		<h1 class="text-2xl font-bold text-white">Block {block.height}</h1>
-		<p class="text-tri-muted text-xs font-mono mt-1 break-all">{block.hash}</p>
+		<div class="flex items-center gap-2 mt-1">
+			<p class="text-tri-muted text-xs font-mono break-all">{block.hash}</p>
+			<CopyButton value={block.hash} label="" size="sm" />
+		</div>
 	</div>
 	<div class="flex gap-2 shrink-0">
 		{#if block.previousblockhash}
@@ -48,10 +52,15 @@
 		<h2 class="text-white font-semibold">Block Details</h2>
 	</div>
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-tri-border">
-		{#each fields as [label, value]}
+		{#each fields as [label, value, copyValue]}
 			<div class="bg-tri-surface px-4 py-3">
 				<span class="text-tri-muted text-xs uppercase tracking-wider">{label}</span>
-				<div class="text-tri-text text-sm mt-0.5 font-mono break-all">{value}</div>
+				<div class="flex items-center gap-2">
+					<div class="text-tri-text text-sm mt-0.5 font-mono break-all flex-1">{value}</div>
+					{#if copyValue}
+						<CopyButton value={copyValue} label="" size="xs" />
+					{/if}
+				</div>
 			</div>
 		{/each}
 	</div>
