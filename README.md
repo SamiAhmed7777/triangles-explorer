@@ -226,3 +226,4 @@ Based on the excellent [Mazacoin Explorer](https://github.com/sami7777/mazacoin-
 ---
 
 **Made with ❤️ for the Triangles community 💎**
+<!-- Auto-deploy working -->
