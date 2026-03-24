@@ -95,6 +95,21 @@ export const getAddressTxids = (addr: string, start?: number, end?: number) => {
 // Validation
 export const validateAddress = (addr: string) => get<ValidationResult>(`validate/${addr}`);
 
+// Rich List
+export const getRichList = (limit?: number) => {
+	const path = limit ? `richlist?limit=${limit}` : 'richlist';
+	return get<{ status: string; total: number; addresses: { address: string; balance: number }[] }>(path);
+};
+
+export const getRichListStatus = () => get<{
+	status: string;
+	lastProcessedBlock: number;
+	chainHeight: number;
+	progress: number;
+	totalAddresses: number;
+	lastUpdate: string;
+}>('richlist/status');
+
 // Helper: get latest N blocks (parallel fetch for performance)
 export async function getLatestBlocks(count: number): Promise<Block[]> {
 	const chain = await getChainInfo();

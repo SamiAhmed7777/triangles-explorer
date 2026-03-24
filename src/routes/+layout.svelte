@@ -8,6 +8,7 @@
 	const navLinks = [
 		{ href: '/', label: 'Home' },
 		{ href: '/blocks', label: 'Blocks' },
+		{ href: '/richlist', label: 'Rich List' },
 		{ href: '/staking', label: 'Staking' },
 		{ href: '/network', label: 'Network' },
 		{ href: '/mempool', label: 'Mempool' },
