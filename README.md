@@ -213,10 +213,11 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Links
 
+- **🔗 Live Block Explorer:** https://blocks.cryptographic-triangles.org
 - **Triangles Website:** https://cryptographic-triangles.org
 - **Explorer API:** https://github.com/SamiAhmed7777/triangles-api
 - **Discord:** https://discord.gg/triangles
-- **Block Explorer:** https://tri.sami (internal) / https://blocks.cryptographic-triangles.org (public)
+- **Internal Access:** https://tri.sami (Tailscale)
 
 ## Acknowledgments
 
