@@ -8,16 +8,54 @@ import type {
 const BASE_URL = env.TRIANGLES_API_URL || 'http://127.0.0.1:19112';
 
 async function get<T>(path: string): Promise<T> {
-	const res = await fetch(`${BASE_URL}/rest/${path}`);
+	const t0 = Date.now();
+	const url = `${BASE_URL}/rest/${path}`;
+	const res = await fetch(url);
+	const fetchTime = Date.now() - t0;
 	if (!res.ok) {
 		const body = await res.text();
 		throw new Error(`API error ${res.status}: ${body}`);
 	}
-	return res.json();
+	const data = await res.json();
+	console.log(`[API] GET ${path} took ${Date.now() - t0}ms (fetch: ${fetchTime}ms)`);
+	return data;
 }
 
-// Chain info
-export const getChainInfo = () => get<ChainInfo>('chaininfo');
+// In-memory cache with deduplication for expensive endpoints
+const apiCache = new Map<string, { data: unknown; timestamp: number; promise?: Promise<unknown> }>();
+const API_CACHE_TTL = 10000; // 10 seconds
+
+async function getCached<T>(path: string, ttl = API_CACHE_TTL): Promise<T> {
+	const now = Date.now();
+	const entry = apiCache.get(path);
+	
+	// Return cached data if fresh
+	if (entry?.data && (now - entry.timestamp) < ttl) {
+		console.log(`[API] CACHE HIT ${path}`);
+		return entry.data as T;
+	}
+	
+	// Deduplicate in-flight requests
+	if (entry?.promise) {
+		console.log(`[API] DEDUP ${path}`);
+		return entry.promise as Promise<T>;
+	}
+	
+	// Make the request
+	const promise = get<T>(path).then(data => {
+		apiCache.set(path, { data, timestamp: Date.now() });
+		return data;
+	}).catch(err => {
+		apiCache.delete(path);
+		throw err;
+	});
+	
+	apiCache.set(path, { data: entry?.data ?? null, timestamp: entry?.timestamp ?? 0, promise });
+	return promise;
+}
+
+// Chain info (cached + deduplicated — expensive due to gettxoutsetinfo)
+export const getChainInfo = () => getCached<ChainInfo>('chaininfo');
 
 // Blocks
 export const getBlock = (hash: string) => get<Block>(`block/${hash}`);
@@ -57,14 +95,16 @@ export const getAddressTxids = (addr: string, start?: number, end?: number) => {
 // Validation
 export const validateAddress = (addr: string) => get<ValidationResult>(`validate/${addr}`);
 
-// Helper: get latest N blocks
+// Helper: get latest N blocks (parallel fetch for performance)
 export async function getLatestBlocks(count: number): Promise<Block[]> {
 	const chain = await getChainInfo();
-	const blocks: Block[] = [];
-	for (let i = 0; i < count && chain.blocks - i >= 0; i++) {
-		try {
-			blocks.push(await getBlockByHeight(chain.blocks - i));
-		} catch { break; }
-	}
-	return blocks;
+	const heights = Array.from({ length: count }, (_, i) => chain.blocks - i).filter(h => h >= 0);
+	
+	// Fetch all blocks in parallel
+	const results = await Promise.allSettled(heights.map(h => getBlockByHeight(h)));
+	
+	// Return only successful fetches
+	return results
+		.filter((r): r is PromiseFulfilledResult<Block> => r.status === 'fulfilled')
+		.map(r => r.value);
 }

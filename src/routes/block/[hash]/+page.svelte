@@ -4,6 +4,7 @@
 
 	let { data } = $props();
 	const block = data.block;
+	const addresses = data.addresses || [];
 
 	const fields: [string, string][] = [
 		['Height', String(block.height)],
@@ -55,6 +56,28 @@
 		{/each}
 	</div>
 </div>
+
+<!-- Addresses Involved -->
+{#if addresses.length > 0}
+<div class="bg-tri-surface border border-tri-border rounded-lg mb-6">
+	<div class="px-4 py-3 border-b border-tri-border">
+		<h2 class="text-white font-semibold">Addresses Involved ({addresses.length})</h2>
+	</div>
+	<div class="px-4 py-4">
+		<div class="flex flex-wrap gap-2">
+			{#each addresses as addr}
+				<a 
+					href="/address/{addr}" 
+					class="inline-block font-mono text-xs px-3 py-1.5 rounded bg-tri-surface-dark border border-tri-border text-tri-text hover:text-tri-accent hover:border-tri-accent transition-colors"
+					title={addr}
+				>
+					{addr}
+				</a>
+			{/each}
+		</div>
+	</div>
+</div>
+{/if}
 
 <!-- Transactions -->
 <div class="bg-tri-surface border border-tri-border rounded-lg overflow-hidden">

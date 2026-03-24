@@ -3,6 +3,15 @@
 
 	let { data } = $props();
 	const tx = data.tx;
+	
+	// Extract unique addresses from outputs
+	const addresses = new Set<string>();
+	tx.vout.forEach(out => {
+		if (out.scriptPubKey.addresses) {
+			out.scriptPubKey.addresses.forEach(addr => addresses.add(addr));
+		}
+	});
+	const uniqueAddresses = Array.from(addresses);
 </script>
 
 <svelte:head>
@@ -42,6 +51,27 @@
 		</div>
 	</div>
 </div>
+
+<!-- Addresses Involved -->
+{#if uniqueAddresses.length > 0}
+<div class="bg-tri-surface border border-tri-border rounded-lg mb-6">
+	<div class="px-4 py-3 border-b border-tri-border">
+		<h2 class="text-white font-semibold">Addresses Involved ({uniqueAddresses.length})</h2>
+	</div>
+	<div class="px-4 py-4">
+		<div class="flex flex-wrap gap-2">
+			{#each uniqueAddresses as addr}
+				<a 
+					href="/address/{addr}" 
+					class="inline-block font-mono text-xs px-3 py-1.5 rounded bg-tri-surface-dark border border-tri-border text-tri-text hover:text-tri-accent hover:border-tri-accent transition-colors"
+				>
+					{addr}
+				</a>
+			{/each}
+		</div>
+	</div>
+</div>
+{/if}
 
 <!-- Inputs -->
 <div class="bg-tri-surface border border-tri-border rounded-lg mb-6 overflow-hidden">

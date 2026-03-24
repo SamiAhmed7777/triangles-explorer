@@ -23,7 +23,7 @@
 		<StatsCard
 			label="Supply"
 			value="{formatAmount(data.chain.moneysupply)} TRI"
-			sub="of 120,000 max"
+			sub="of 222,222 max"
 		/>
 		<StatsCard
 			label="PoS Difficulty"
