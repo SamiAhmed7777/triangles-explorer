@@ -66,6 +66,10 @@
 			{/if}
 			<div class="text-center text-xs text-tri-muted mt-2">
 				Triangles Block Explorer &mdash; <a href="https://cryptographic-triangles.org" class="text-tri-accent hover:underline">cryptographic-triangles.org</a>
+				<span class="mx-2">|</span>
+				<a href="https://t.me/+r3ba6HDT9YZmOTBk" target="_blank" rel="noopener noreferrer" class="text-tri-accent hover:underline">Telegram</a>
+				<span class="mx-2">|</span>
+				<a href="https://discord.gg/byV4GhtXKg" target="_blank" rel="noopener noreferrer" class="text-tri-accent hover:underline">Discord</a>
 			</div>
 		</div>
 	</footer>
