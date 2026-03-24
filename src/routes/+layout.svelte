@@ -110,7 +110,7 @@
 				<a href="https://github.com/triangles-project" class="text-tri-accent hover:text-white transition-colors" target="_blank" rel="noopener">
 					📦 GitHub
 				</a>
-				<a href="https://discord.gg/triangles" class="text-tri-accent hover:text-white transition-colors" target="_blank" rel="noopener">
+				<a href="https://discord.gg/byV4GhtXKg" class="text-tri-accent hover:text-white transition-colors" target="_blank" rel="noopener">
 					💬 Discord
 				</a>
 				<a href="/api" class="text-tri-accent hover:text-white transition-colors">
