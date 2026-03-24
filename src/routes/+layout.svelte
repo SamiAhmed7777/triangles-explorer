@@ -70,6 +70,8 @@
 				<a href="https://t.me/+r3ba6HDT9YZmOTBk" target="_blank" rel="noopener noreferrer" class="text-tri-accent hover:underline">Telegram</a>
 				<span class="mx-2">|</span>
 				<a href="https://discord.gg/byV4GhtXKg" target="_blank" rel="noopener noreferrer" class="text-tri-accent hover:underline">Discord</a>
+				<span class="mx-2">|</span>
+				<a href="https://github.com/SamiAhmed7777/triangles_v5" target="_blank" rel="noopener noreferrer" class="text-tri-accent hover:underline">GitHub</a>
 			</div>
 		</div>
 	</footer>
