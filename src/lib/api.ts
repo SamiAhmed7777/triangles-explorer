@@ -2,7 +2,7 @@ import { env } from '$env/dynamic/private';
 import type {
 	ChainInfo, Block, BlockHeader, Transaction, Difficulty,
 	StakingInfo, MiningInfo, NetworkInfo, PeerInfo,
-	AddressBalance, AddressUtxo, SupplyInfo, ValidationResult
+	AddressBalance, AddressUtxo, SupplyInfo, ValidationResult, TransactionSummary
 } from './types';
 
 const BASE_URL = env.TRIANGLES_API_URL || 'http://127.0.0.1:19112';
@@ -94,6 +94,35 @@ export const getAddressTxids = (addr: string, start?: number, end?: number) => {
 
 // Validation
 export const validateAddress = (addr: string) => get<ValidationResult>(`validate/${addr}`);
+
+function summarizeTransaction(tx: Transaction): TransactionSummary {
+	return {
+		txid: tx.txid,
+		time: tx.blocktime ?? tx.time,
+		confirmations: tx.confirmations,
+		outputCount: tx.vout.length,
+		totalOutput: tx.vout.reduce((sum, vout) => sum + vout.value, 0),
+		primaryAddress: tx.vout.flatMap((vout) => vout.scriptPubKey.addresses ?? [])[0],
+		isReward: tx.vin.some((vin) => Boolean(vin.coinbase))
+	};
+}
+
+export async function getTransactionSummaries(
+	txids: string[],
+	limit = txids.length
+): Promise<TransactionSummary[]> {
+	const selected = limit > 0 ? txids.slice(0, limit) : txids;
+
+	return Promise.all(
+		selected.map(async (txid) => {
+			try {
+				return summarizeTransaction(await getTransaction(txid));
+			} catch {
+				return { txid };
+			}
+		})
+	);
+}
 
 // Helper: get latest N blocks (parallel fetch for performance)
 export async function getLatestBlocks(count: number): Promise<Block[]> {

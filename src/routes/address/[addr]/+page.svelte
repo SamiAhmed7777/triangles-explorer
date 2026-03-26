@@ -68,13 +68,13 @@
 	<!-- Transaction History -->
 	<div class="bg-tri-surface border border-tri-border rounded-lg overflow-hidden">
 		<div class="px-4 py-3 border-b border-tri-border">
-			<h2 class="text-white font-semibold">Transactions ({data.txids.length})</h2>
+			<h2 class="text-white font-semibold">Transactions ({data.totalTxs})</h2>
 		</div>
-		{#if data.txids.length > 0}
-			<TxTable txids={data.txids} limit={50} />
-			{#if data.txids.length > 50}
+		{#if data.txs.length > 0}
+			<TxTable txs={data.txs} />
+			{#if data.totalTxs > 50}
 				<div class="px-4 py-3 text-center text-tri-muted text-sm border-t border-tri-border">
-					Showing 50 of {data.txids.length} transactions
+					Showing 50 of {data.totalTxs} transactions
 				</div>
 			{/if}
 		{:else}

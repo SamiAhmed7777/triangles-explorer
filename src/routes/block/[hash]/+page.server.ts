@@ -1,4 +1,5 @@
-import { getBlock, getTransaction } from '$lib/api';
+import { getBlock, getTransactionSummaries } from '$lib/api';
+import { getTransaction } from '$lib/api';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -26,6 +27,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
 		return { 
 			block,
+			txs: await getTransactionSummaries(block.tx),
 			addresses: Array.from(addressSet)
 		};
 	} catch {

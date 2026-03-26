@@ -84,5 +84,5 @@
 	<div class="px-4 py-3 border-b border-tri-border">
 		<h2 class="text-white font-semibold">Transactions ({block.tx.length})</h2>
 	</div>
-	<TxTable txids={block.tx} />
+	<TxTable txs={data.txs} />
 </div>

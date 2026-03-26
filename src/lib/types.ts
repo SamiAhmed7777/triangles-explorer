@@ -59,6 +59,16 @@ export interface Transaction {
 	blocktime?: number;
 }
 
+export interface TransactionSummary {
+	txid: string;
+	time?: number;
+	confirmations?: number;
+	outputCount?: number;
+	totalOutput?: number;
+	primaryAddress?: string;
+	isReward?: boolean;
+}
+
 export interface TxInput {
 	txid?: string;
 	vout?: number;
