@@ -10,6 +10,7 @@
 		{ href: '/blocks', label: 'Blocks' },
 		{ href: '/staking', label: 'Staking' },
 		{ href: '/network', label: 'Network' },
+		{ href: '/nodes', label: 'Nodes' },
 		{ href: '/mempool', label: 'Mempool' },
 		{ href: '/api', label: 'API' }
 	];
