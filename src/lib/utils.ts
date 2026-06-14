@@ -9,9 +9,11 @@ export function timeAgo(timestamp: number): string {
 	return `${days}d ago`;
 }
 
-export function truncateHash(hash: string, chars = 8): string {
-	if (hash.length <= chars * 2 + 3) return hash;
-	return `${hash.slice(0, chars)}...${hash.slice(-chars)}`;
+export function truncateHash(hash: unknown, chars = 8): string {
+	if (hash === null || hash === undefined) return '';
+	const s = String(hash);
+	if (s.length <= chars * 2 + 3) return s;
+	return `${s.slice(0, chars)}...${s.slice(-chars)}`;
 }
 
 export function formatAmount(amount: number): string {
