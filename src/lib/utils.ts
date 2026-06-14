@@ -23,6 +23,7 @@ export function formatDifficulty(diff: number): string {
 	if (diff >= 1e9) return (diff / 1e9).toFixed(2) + 'G';
 	if (diff >= 1e6) return (diff / 1e6).toFixed(2) + 'M';
 	if (diff >= 1e3) return (diff / 1e3).toFixed(2) + 'K';
+	if (diff > 0 && diff < 0.01) return diff.toPrecision(3); // PoS difficulty is tiny
 	return diff.toFixed(4);
 }
 

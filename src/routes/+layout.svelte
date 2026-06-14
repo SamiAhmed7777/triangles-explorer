@@ -26,8 +26,9 @@
 	<header class="border-b border-tri-border bg-tri-surface/50 backdrop-blur-sm sticky top-0 z-50">
 		<div class="max-w-7xl mx-auto px-4 py-3">
 			<div class="flex items-center justify-between gap-4 flex-wrap">
-				<a href="/" class="text-xl font-bold text-white flex items-center gap-2 shrink-0">
-					<span class="text-tri-accent">&#9650;</span> Triangles Explorer
+				<a href="/" class="flex items-center gap-2 shrink-0">
+					<img src="/triangles-wordmark.png" alt="Cryptographic Triangles" class="h-9 w-auto" />
+					<span class="text-tri-muted text-sm font-semibold hidden sm:inline">Explorer</span>
 				</a>
 				<SearchBar />
 			</div>

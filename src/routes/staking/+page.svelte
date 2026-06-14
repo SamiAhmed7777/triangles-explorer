@@ -50,7 +50,6 @@
 		<StatsCard label="Network Stake Weight" value={formatNumber(data.staking.netstakeweight)} />
 		<StatsCard label="Stake Interest" value="{data.mining.stakeinterest}% annual" />
 		<StatsCard label="Block Subsidy" value={data.subsidy != null ? String(data.subsidy) : 'N/A'} />
-		<StatsCard label="Net Hash Rate" value="{data.mining.netmhashps.toFixed(2)} MH/s" />
 		<StatsCard label="PoW Difficulty" value={data.difficulty ? formatDifficulty(data.difficulty['proof-of-work']) : 'N/A'} />
 		<StatsCard
 			label="Expected Time"

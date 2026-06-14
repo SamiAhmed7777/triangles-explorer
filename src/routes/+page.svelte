@@ -23,7 +23,7 @@
 		<StatsCard
 			label="Supply"
 			value="{formatAmount(data.chain.moneysupply)} TRI"
-			sub="of 222,222 max"
+			sub="of 2,222,222 max"
 		/>
 		<StatsCard
 			label="PoS Difficulty"
@@ -52,8 +52,9 @@
 					sub="Annual rate"
 				/>
 				<StatsCard
-					label="Network Hash"
-					value="{data.mining.netmhashps.toFixed(2)} MH/s"
+					label="Consensus"
+					value="Proof of Stake"
+					sub="PoW ended at block 9,000"
 				/>
 				<StatsCard
 					label="Pooled Txs"
