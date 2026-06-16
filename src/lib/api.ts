@@ -137,3 +137,7 @@ export async function getLatestBlocks(count: number): Promise<Block[]> {
 		.filter((r): r is PromiseFulfilledResult<Block> => r.status === 'fulfilled')
 		.map(r => r.value);
 }
+
+export interface RichListEntry { address: string; balance: number; }
+export interface RichListResponse { status: string; total: number; addresses: RichListEntry[]; }
+export const getRichList = (limit = 100) => getCached<RichListResponse>(`richlist?limit=${limit}`);

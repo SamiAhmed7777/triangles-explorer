@@ -11,6 +11,7 @@
 		{ href: '/staking', label: 'Staking' },
 		{ href: '/network', label: 'Network' },
 		{ href: '/nodes', label: 'Nodes' },
+		{ href: '/richlist', label: 'Rich List' },
 		{ href: '/mempool', label: 'Mempool' },
 		{ href: '/api', label: 'API' }
 	];
