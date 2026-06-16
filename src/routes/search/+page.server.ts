@@ -7,32 +7,43 @@ export const load: PageServerLoad = async ({ url }) => {
 	const q = url.searchParams.get('q')?.trim();
 	if (!q) error(400, 'No search query provided');
 
-	// Numeric: treat as block height
+	// Numeric: treat as block height.
+	// NOTE: redirect()/error() throw, so they must live OUTSIDE the try/catch —
+	// otherwise the thrown redirect is swallowed and turned into a 404.
 	if (isNumeric(q)) {
+		let blockhash: string | undefined;
 		try {
-			const { blockhash } = await getBlockHashByHeight(parseInt(q));
-			redirect(302, `/block/${blockhash}`);
+			({ blockhash } = await getBlockHashByHeight(parseInt(q)));
 		} catch {
-			error(404, `Block at height ${q} not found`);
+			blockhash = undefined;
 		}
+		if (!blockhash) error(404, `Block at height ${q} not found`);
+		redirect(302, `/block/${blockhash}`);
 	}
 
-	// 64-char hex: try block hash, then txid
+	// 64-char hex: try block hash, then txid.
 	if (isBlockHash(q)) {
+		let isBlock = false;
 		try {
 			await getBlock(q);
-			redirect(302, `/block/${q}`);
+			isBlock = true;
 		} catch {
-			// Not a block, try as txid
+			isBlock = false;
 		}
+		if (isBlock) redirect(302, `/block/${q}`);
+
+		let isTx = false;
 		try {
 			await getTransaction(q);
-			redirect(302, `/tx/${q}`);
+			isTx = true;
 		} catch {
-			error(404, `No block or transaction found for ${q}`);
+			isTx = false;
 		}
+		if (isTx) redirect(302, `/tx/${q}`);
+
+		error(404, `No block or transaction found for ${q}`);
 	}
 
-	// Otherwise: try as address
+	// Otherwise: treat as an address and go straight to its page.
 	redirect(302, `/address/${q}`);
 };

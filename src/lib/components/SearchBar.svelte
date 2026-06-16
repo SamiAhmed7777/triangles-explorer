@@ -1,22 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { isBlockHash, isNumeric, isAddress } from '$lib/utils';
 
 	let query = $state('');
 
-	function handleSearch() {
+	function handleSearch(e: Event) {
+		e.preventDefault();
 		const q = query.trim();
 		if (!q) return;
-
-		if (isNumeric(q)) {
-			goto(`/blocks/${q}`);
-		} else if (isBlockHash(q)) {
-			goto(`/search?q=${q}`);
-		} else if (isAddress(q)) {
-			goto(`/address/${q}`);
-		} else {
-			goto(`/search?q=${q}`);
-		}
+		// Delegate disambiguation (height / block hash / txid / address) to the
+		// /search server loader, which redirects to the correct page.
+		goto(`/search?q=${encodeURIComponent(q)}`);
 		query = '';
 	}
 </script>
