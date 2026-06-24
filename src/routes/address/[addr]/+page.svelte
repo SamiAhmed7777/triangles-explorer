@@ -3,8 +3,20 @@
 	import QRCode from '$lib/components/QRCode.svelte';
 	import { formatAmount, truncateHash, formatNumber } from '$lib/utils';
 
+	// Verified dev contact — populated on 2026-06-23. The signature is
+	// hardcoded and matches the proof published on the project website.
+	// To rotate, generate a new address in TrianglesQt, sign the same
+	// message text, and replace the three fields below.
+	const DEV_CONTACT = {
+		address: 'TRsiRzkMWm87ZuWFwPB8YXFGYr5AQZo7fb',
+		message: 'ROGER THAT, TRIANGLES DEV ADDRESS IS A GO.\n\n5.9.23 IS LIVE.',
+		signature:
+			'H/gT/bFSL+WFT4F4WYPvDIVAnt0/M2WQy/ypUvhMtdXgAop+Euycakif9QERNcUfPLNF29vDxuXZf1BJjd8Snro='
+	};
+
 	let { data } = $props();
-	
+	const isDevContact = data.address === DEV_CONTACT.address;
+
 	// Copy address to clipboard
 	let copied = $state(false);
 	function copyAddress() {
@@ -20,6 +32,40 @@
 	<meta name="description" content="Triangles address {data.address} - balance, transactions, and QR code" />
 </svelte:head>
 
+{#if isDevContact}
+	<!-- Verified Dev Contact badge -->
+	<div class="mb-6 bg-tri-green/10 border-2 border-tri-green/40 rounded-lg p-5">
+		<div class="flex items-center gap-2 mb-2">
+			<span class="text-tri-green text-2xl">✓</span>
+			<h2 class="text-white font-semibold text-lg">Verified Dev Contact</h2>
+		</div>
+		<p class="text-tri-muted text-sm mb-3">
+			This address is cryptographically verified as the official Triangles developer contact address. The
+			signature below was produced by the private key for this address and can be re-verified by anyone
+			using <code class="bg-tri-surface px-1 rounded text-tri-text">trianglesd verifymessage</code> or
+			the <a href="/verify" class="text-tri-accent hover:text-tri-accent-light">/verify</a> tool.
+		</p>
+		<details class="text-sm">
+			<summary class="cursor-pointer text-tri-accent hover:text-tri-accent-light select-none">
+				Show signed message proof
+			</summary>
+			<div class="mt-3 space-y-3">
+				<div>
+					<div class="text-tri-muted text-xs uppercase tracking-wider mb-1">Message</div>
+					<pre
+						class="font-mono text-xs text-tri-text bg-tri-bg/50 border border-tri-border rounded p-2 whitespace-pre-wrap break-all">{DEV_CONTACT.message}</pre>
+				</div>
+				<div>
+					<div class="text-tri-muted text-xs uppercase tracking-wider mb-1">Signature</div>
+					<code
+						class="font-mono text-xs text-tri-text bg-tri-bg/50 border border-tri-border rounded p-2 break-all block"
+					>{DEV_CONTACT.signature}</code>
+				</div>
+			</div>
+		</details>
+	</div>
+{/if}
+
 {#if data.indexError}
 	<div class="mb-6">
 		<h1 class="text-3xl font-bold text-white mb-3">Address Details</h1>
@@ -27,7 +73,7 @@
 			Address index is not enabled on this node. Start the daemon with <code class="bg-tri-surface px-1 rounded">-addressindex=1</code> to enable address lookups.
 		</div>
 	</div>
-	
+
 	<!-- Still show address and QR even if index disabled -->
 	<div class="bg-tri-surface border border-tri-border rounded-lg p-6">
 		<div class="text-center">
@@ -35,7 +81,7 @@
 				<QRCode data={data.address} size={256} />
 			</div>
 			<div class="font-mono text-sm text-tri-text break-all mb-3">{data.address}</div>
-			<button 
+			<button
 				onclick={copyAddress}
 				class="px-4 py-2 bg-tri-accent hover:bg-tri-accent-light text-white rounded transition-colors text-sm font-medium"
 			>

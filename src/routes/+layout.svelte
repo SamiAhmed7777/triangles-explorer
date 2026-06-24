@@ -13,6 +13,7 @@
 		{ href: '/nodes', label: 'Nodes' },
 		{ href: '/richlist', label: 'Rich List' },
 		{ href: '/mempool', label: 'Mempool' },
+		{ href: '/verify', label: 'Verify' },
 		{ href: '/api', label: 'API' }
 	];
 </script>
